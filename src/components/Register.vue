@@ -30,7 +30,7 @@
       <b-field label="Confirm pass" horizontal>
         <b-input v-model="confirmPass" password-reveal required></b-input>
       </b-field>
-      <button class="button is-primary" @click="register()">Register</button>
+      <button class="button is-primary" :class="{'is-loading':isLoading}" @click="register()">Register</button>
     </div>
   </div>
 </template>
@@ -41,7 +41,8 @@ export default {
     return {
       name: '',
       pass: '',
-      confirmPass: ''
+      confirmPass: '',
+      isLoading: false
     }
   },
   methods: {
@@ -87,7 +88,7 @@ export default {
       }
 
       console.log(json)
-
+      this.isLoading = true
       let response = await this.axios.post(request,json)
 
       if (response.data.error)
@@ -97,7 +98,7 @@ export default {
         let account = await this.$karma.login(this.name, this.pass)
         this.$emit('clicked', account)
       }
-
+      this.isLoading = false
       console.log("account created", response)
     }
   }
